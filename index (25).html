@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Product Teardowns — Rahul Reddy</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0a;
+  --bg2:#111;
+  --bg3:#1a1a1a;
+  --text:#f0ede8;
+  --text2:#888;
+  --text3:#444;
+  --border:rgba(255,255,255,0.08);
+  --border2:rgba(255,255,255,0.14);
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 40px;display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,10,0.85);backdrop-filter:blur(12px);border-bottom:0.5px solid var(--border)}
+.nav-logo{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;letter-spacing:-0.02em;color:var(--text)}
+.nav-pills{display:flex;gap:6px}
+.nav-pill{padding:6px 14px;border-radius:99px;font-size:12px;font-weight:500;cursor:pointer;border:0.5px solid var(--border2);background:transparent;color:var(--text2);transition:all 0.2s;font-family:'DM Sans',sans-serif}
+.nav-pill:hover{color:var(--text);border-color:rgba(255,255,255,0.3)}
+.nav-pill.active{background:var(--text);color:var(--bg);border-color:var(--text)}
+
+/* HERO */
+.hero{padding:140px 40px 80px;max-width:1100px;margin:0 auto}
+.hero-tag{font-family:'DM Mono',monospace;font-size:11px;color:var(--text2);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.hero-tag::before{content:'';width:24px;height:1px;background:var(--text2)}
+.hero-title{font-family:'Syne',sans-serif;font-size:clamp(42px,6vw,80px);font-weight:800;line-height:1.0;letter-spacing:-0.04em;margin-bottom:24px}
+.hero-title span{color:var(--text2)}
+.hero-desc{font-size:16px;color:var(--text2);max-width:520px;line-height:1.7;margin-bottom:48px}
+.hero-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.hero-card{padding:20px;border-radius:12px;border:0.5px solid var(--border2);background:var(--bg2);cursor:pointer;transition:all 0.25s;position:relative;overflow:hidden}
+.hero-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity 0.25s}
+.hero-card:hover{border-color:rgba(255,255,255,0.25);transform:translateY(-2px)}
+.hero-card:hover::before{opacity:1}
+.hc-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);margin-bottom:12px}
+.hc-logo{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:6px}
+.hc-focus{font-size:11px;color:var(--text2);line-height:1.5}
+.hc-tag{display:inline-block;margin-top:10px;font-size:10px;padding:3px 8px;border-radius:99px;font-weight:500}
+
+/* card accent colors */
+.card-li .hc-logo{color:#0A66C2}
+.card-li .hc-tag{background:rgba(10,102,194,0.15);color:#4DA3FF}
+.card-li::before{background:radial-gradient(circle at top left,rgba(10,102,194,0.08),transparent 70%)}
+.card-no .hc-logo{color:#fff}
+.card-no .hc-tag{background:rgba(255,255,255,0.08);color:#ccc}
+.card-no::before{background:radial-gradient(circle at top left,rgba(255,255,255,0.04),transparent 70%)}
+.card-wz .hc-logo{color:#33CCFF}
+.card-wz .hc-tag{background:rgba(51,204,255,0.12);color:#33CCFF}
+.card-wz::before{background:radial-gradient(circle at top left,rgba(51,204,255,0.06),transparent 70%)}
+.card-fg .hc-logo{color:#F24E1E}
+.card-fg .hc-tag{background:rgba(242,78,30,0.12);color:#F24E1E}
+.card-fg::before{background:radial-gradient(circle at top left,rgba(242,78,30,0.06),transparent 70%)}
+.card-dl .hc-logo{color:#58CC02}
+.card-dl .hc-tag{background:rgba(88,204,2,0.12);color:#58CC02}
+.card-dl::before{background:radial-gradient(circle at top left,rgba(88,204,2,0.06),transparent 70%)}
+
+/* TEARDOWN SECTIONS */
+.teardown{padding:80px 40px;max-width:1100px;margin:0 auto;display:none}
+.teardown.active{display:block}
+
+.td-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:60px;gap:40px;flex-wrap:wrap}
+.td-title-block{}
+.td-app-name{font-family:'Syne',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:800;letter-spacing:-0.04em;line-height:1.0;margin-bottom:8px}
+.td-subtitle{font-size:16px;color:var(--text2);max-width:480px;line-height:1.6;margin-bottom:20px}
+.td-meta{display:flex;gap:10px;flex-wrap:wrap}
+.td-badge{font-size:11px;padding:4px 12px;border-radius:99px;border:0.5px solid var(--border2);color:var(--text2);font-family:'DM Mono',monospace}
+.td-nav{display:flex;flex-direction:column;gap:6px;min-width:180px}
+.td-nav-item{padding:10px 16px;border-radius:8px;font-size:13px;cursor:pointer;border:0.5px solid var(--border);color:var(--text2);background:transparent;text-align:left;transition:all 0.15s;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:10px}
+.td-nav-item:hover{background:var(--bg2);color:var(--text)}
+.td-nav-item.active{background:var(--bg2);color:var(--text);border-color:var(--border2)}
+.td-nav-item .step-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);min-width:16px}
+
+/* PHASE SECTIONS */
+.phase{display:none}
+.phase.active{display:block}
+.phase-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);margin-bottom:32px;display:flex;align-items:center;gap:8px}
+.phase-label::after{content:'';flex:1;height:0.5px;background:var(--border2)}
+
+/* OVERVIEW PHASE */
+.overview-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:32px}
+.ov-card{padding:24px;border-radius:12px;border:0.5px solid var(--border2);background:var(--bg2)}
+.ov-card-title{font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;font-family:'DM Mono',monospace}
+.ov-card-text{font-size:14px;color:var(--text2);line-height:1.7}
+.problem-box{padding:28px;border-radius:12px;border-left:3px solid;margin-bottom:20px}
+.problem-box p{font-size:15px;line-height:1.75;color:var(--text2)}
+.problem-box strong{color:var(--text)}
+
+/* PERSONA PHASE */
+.personas-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px}
+.persona-card{padding:24px;border-radius:12px;border:0.5px solid var(--border2);background:var(--bg2);position:relative}
+.persona-primary{border-color:rgba(255,255,255,0.25)}
+.persona-primary-badge{position:absolute;top:16px;right:16px;font-size:10px;padding:3px 8px;border-radius:99px;background:rgba(255,255,255,0.1);color:var(--text2);font-family:'DM Mono',monospace}
+.persona-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:14px}
+.persona-name{font-family:'Syne',sans-serif;font-size:16px;font-weight:600;margin-bottom:4px}
+.persona-role{font-size:12px;color:var(--text2);margin-bottom:14px}
+.persona-quote{font-size:13px;color:var(--text2);line-height:1.65;font-style:italic;border-left:2px solid var(--border2);padding-left:12px}
+
+/* JOURNEY PHASE */
+.journey-steps{display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
+.journey-step{display:grid;grid-template-columns:120px 1fr 80px;gap:20px;align-items:start;padding:20px;border-radius:12px;border:0.5px solid var(--border);background:var(--bg2)}
+.journey-step.bad{border-left:3px solid #ef4444}
+.journey-step.neutral{border-left:3px solid #f59e0b}
+.journey-step.good{border-left:3px solid #22c55e}
+.journey-step.verybad{border-left:3px solid #7f1d1d;background:#1a0a0a}
+.js-step{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)}
+.js-action{font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px}
+.js-pain{font-size:12px;color:var(--text2);line-height:1.5}
+.js-score{font-size:11px;font-weight:600;padding:4px 10px;border-radius:99px;text-align:center;white-space:nowrap}
+.score-good{background:rgba(34,197,94,0.15);color:#22c55e}
+.score-neutral{background:rgba(245,158,11,0.15);color:#f59e0b}
+.score-bad{background:rgba(239,68,68,0.15);color:#ef4444}
+.score-verybad{background:rgba(127,29,29,0.3);color:#fca5a5}
+
+/* SCORECARD PHASE */
+.scorecard-table{width:100%;border-collapse:collapse;margin-bottom:32px}
+.scorecard-table th{font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);padding:12px 16px;text-align:left;border-bottom:0.5px solid var(--border2)}
+.scorecard-table td{padding:16px;font-size:13px;color:var(--text2);border-bottom:0.5px solid var(--border);vertical-align:top;line-height:1.5}
+.scorecard-table td:first-child{color:var(--text);font-weight:500}
+.pain-score{display:inline-block;width:20px;height:20px;border-radius:50%;font-size:10px;line-height:20px;text-align:center}
+
+/* SOLUTIONS PHASE */
+.solutions-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.solution-card{padding:24px;border-radius:12px;border:0.5px solid var(--border2);background:var(--bg2)}
+.sol-priority{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:8px}
+.sol-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:600;margin-bottom:10px}
+.sol-desc{font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:14px}
+.sol-hypothesis{font-size:12px;color:var(--text2);padding:12px;background:var(--bg3);border-radius:8px;border-left:2px solid var(--border2);line-height:1.6}
+.sol-hypothesis strong{color:var(--text);display:block;margin-bottom:4px;font-size:11px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:0.06em}
+.priority-matrix{display:grid;grid-template-columns:1fr 1fr;gap:2px;border-radius:12px;overflow:hidden;border:0.5px solid var(--border2);margin-bottom:32px}
+.pm-cell{padding:20px;background:var(--bg2);position:relative}
+.pm-cell-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.06em}
+.pm-item{font-size:12px;color:var(--text2);padding:6px 10px;border-radius:6px;background:var(--bg3);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.pm-item.ship{color:var(--text)}
+.pm-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+/* MVP PHASE */
+.mvp-changes{display:flex;flex-direction:column;gap:14px;margin-bottom:32px}
+.mvp-change{display:flex;gap:20px;padding:20px;border-radius:12px;border:0.5px solid var(--border2);background:var(--bg2);align-items:flex-start}
+.mvp-num{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--border2);flex-shrink:0;line-height:1;margin-top:2px}
+.mvp-content{}
+.mvp-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:6px}
+.mvp-desc{font-size:13px;color:var(--text2);line-height:1.65}
+.gtm-box{padding:24px;border-radius:12px;border:0.5px solid var(--border2);background:var(--bg2)}
+.gtm-title{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px}
+.gtm-items{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.gtm-item{padding:14px;border-radius:8px;background:var(--bg3)}
+.gtm-item-label{font-size:11px;color:var(--text3);margin-bottom:4px;font-family:'DM Mono',monospace}
+.gtm-item-value{font-size:13px;color:var(--text2)}
+
+/* BACK BTN */
+.back-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:8px;background:var(--bg2);border:0.5px solid var(--border2);color:var(--text2);font-size:13px;cursor:pointer;margin-bottom:48px;transition:all 0.15s;font-family:'DM Sans',sans-serif}
+.back-btn:hover{color:var(--text);border-color:rgba(255,255,255,0.25)}
+
+/* DIVIDER */
+.section-divider{height:0.5px;background:var(--border);margin:48px 0}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp 0.4s ease forwards}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  nav{padding:14px 20px}
+  .hero{padding:100px 20px 60px}
+  .hero-cards{grid-template-columns:1fr 1fr}
+  .teardown{padding:60px 20px}
+  .overview-grid,.personas-grid,.solutions-grid,.gtm-items{grid-template-columns:1fr}
+  .journey-step{grid-template-columns:1fr;gap:8px}
+  .td-header{flex-direction:column}
+  .priority-matrix{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Rahul Reddy · Product Teardowns</div>
+  <div class="nav-pills">
+    <button class="nav-pill active" onclick="showHome()">All teardowns</button>
+    <button class="nav-pill" onclick="showTeardown('li')">LinkedIn</button>
+    <button class="nav-pill" onclick="showTeardown('no')">Notion</button>
+    <button class="nav-pill" onclick="showTeardown('wz')">Waze</button>
+    <button class="nav-pill" onclick="showTeardown('fg')">Figma</button>
+    <button class="nav-pill" onclick="showTeardown('dl')">Duolingo</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<section id="home" class="hero">
+  <div class="hero-tag">PM Portfolio · 2025</div>
+  <h1 class="hero-title">5 product<br/><span>teardowns</span></h1>
+  <p class="hero-desc">Deep dives into real product decisions — what works, what does not, and what I would change. Each teardown follows the full PM framework: personas, user journey, pain points, solutions, and MVP.</p>
+  <div class="hero-cards">
+    <div class="hero-card card-li" onclick="showTeardown('li')">
+      <div class="hc-num">01</div>
+      <div class="hc-logo">LinkedIn</div>
+      <div class="hc-focus">Why creators opt in and go quiet</div>
+      <div class="hc-tag">Retention</div>
+    </div>
+    <div class="hero-card card-no" onclick="showTeardown('no')">
+      <div class="hc-num">02</div>
+      <div class="hc-logo">Notion</div>
+      <div class="hc-focus">Why new users never see the value</div>
+      <div class="hc-tag">Activation</div>
+    </div>
+    <div class="hero-card card-wz" onclick="showTeardown('wz')">
+      <div class="hc-num">03</div>
+      <div class="hc-logo">Waze</div>
+      <div class="hc-focus">Why reporters are losing motivation</div>
+      <div class="hc-tag">Retention</div>
+    </div>
+    <div class="hero-card card-fg" onclick="showTeardown('fg')">
+      <div class="hc-num">04</div>
+      <div class="hc-logo">Figma</div>
+      <div class="hc-focus">Why free users never upgrade</div>
+      <div class="hc-tag">Revenue</div>
+    </div>
+    <div class="hero-card card-dl" onclick="showTeardown('dl')">
+      <div class="hc-num">05</div>
+      <div class="hc-logo">Duolingo</div>
+      <div class="hc-focus">Why streaks create the wrong habit</div>
+      <div class="hc-tag">Retention</div>
+    </div>
+  </div>
+</section>
+
+<!-- LINKEDIN TEARDOWN -->
+<section id="td-li" class="teardown">
+  <button class="back-btn" onclick="showHome()">← All teardowns</button>
+  <div class="td-header">
+    <div class="td-title-block">
+      <div class="td-app-name" style="color:#4DA3FF">LinkedIn</div>
+      <p class="td-subtitle">Creator Mode launched in 2021. Millions opted in. Most stopped posting within weeks. Here is why — and what to fix.</p>
+      <div class="td-meta">
+        <span class="td-badge">Retention</span>
+        <span class="td-badge">Creator Mode</span>
+        <span class="td-badge">Improvement teardown</span>
+      </div>
+    </div>
+    <div class="td-nav">
+      <button class="td-nav-item active" onclick="showPhase('li','overview')"><span class="step-num">01</span> Overview</button>
+      <button class="td-nav-item" onclick="showPhase('li','personas')"><span class="step-num">02</span> Personas</button>
+      <button class="td-nav-item" onclick="showPhase('li','journey')"><span class="step-num">03</span> User journey</button>
+      <button class="td-nav-item" onclick="showPhase('li','scorecard')"><span class="step-num">04</span> Pain points</button>
+      <button class="td-nav-item" onclick="showPhase('li','solutions')"><span class="step-num">05</span> Solutions</button>
+      <button class="td-nav-item" onclick="showPhase('li','mvp')"><span class="step-num">06</span> MVP + GTM</button>
+    </div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div id="li-overview" class="phase active fade-up">
+    <div class="phase-label">Phase 1 — Overview</div>
+    <div class="overview-grid">
+      <div class="ov-card">
+        <div class="ov-card-title">What is LinkedIn</div>
+        <div class="ov-card-text">The world's largest professional network. 1B+ members. Revenue from talent solutions, marketing, and Premium subscriptions. All three depend on one thing: active, high-quality content keeping people coming back.</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-card-title">What is Creator Mode</div>
+        <div class="ov-card-text">Launched 2021. Converts a standard profile into a content-first presence. Follow button replaces connect. Better algorithmic distribution. Access to LinkedIn Live and newsletters.</div>
+      </div>
+    </div>
+    <div class="problem-box" style="border-color:#4DA3FF;background:rgba(10,102,194,0.06)">
+      <p><strong>The problem:</strong> Creator Mode has a drop-off problem hiding inside an activation success. Creators opt in, post actively for 2–3 weeks, then go quiet. The feed fills back up with work anniversaries. LinkedIn invested in creator tools that most creators stopped using after the first month.</p>
+    </div>
+    <div class="overview-grid">
+      <div class="ov-card">
+        <div class="ov-card-title">Who</div>
+        <div class="ov-card-text">Professionals who opted into Creator Mode — consultants, founders, PMs, engineers — who want to build a professional audience.</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-card-title">Why it matters</div>
+        <div class="ov-card-text">Better content = more engagement = more ad impressions + more Premium conversions. Creator retention is a direct revenue lever LinkedIn is currently underinvesting in.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERSONAS -->
+  <div id="li-personas" class="phase fade-up">
+    <div class="phase-label">Phase 2 — User personas</div>
+    <div class="personas-grid">
+      <div class="persona-card persona-primary">
+        <span class="persona-primary-badge">Primary focus</span>
+        <div class="persona-avatar" style="background:rgba(10,102,194,0.2);color:#4DA3FF">M</div>
+        <div class="persona-name">Maya, 32</div>
+        <div class="persona-role">Senior PM · Aspiring thought leader</div>
+        <div class="persona-quote">"I can see the numbers after I post but I cannot figure out what they mean or what I should do differently."</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-avatar" style="background:rgba(255,255,255,0.06);color:#888">J</div>
+        <div class="persona-name">James, 45</div>
+        <div class="persona-role">Independent consultant · Reluctant expert</div>
+        <div class="persona-quote">"I know I have things worth saying. I just do not know if anyone who matters is listening."</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-avatar" style="background:rgba(255,255,255,0.06);color:#888">P</div>
+        <div class="persona-name">Priya, 28</div>
+        <div class="persona-role">Founder · Active creator</div>
+        <div class="persona-quote">"The analytics tell me what happened. They do not help me figure out what to do next."</div>
+      </div>
+    </div>
+    <div class="ov-card">
+      <div class="ov-card-title">Why Maya</div>
+      <div class="ov-card-text">Maya represents the largest group of Creator Mode users — genuine intent, early activation, rapid drop-off. Solving for Maya partially solves for James. Priya already has a system and needs different tools.</div>
+    </div>
+  </div>
+
+  <!-- JOURNEY -->
+  <div id="li-journey" class="phase fade-up">
+    <div class="phase-label">Phase 3 — User journey (post-publish)</div>
+    <div class="journey-steps">
+      <div class="journey-step good">
+        <div class="js-step">Step 1</div>
+        <div><div class="js-action">Post published</div><div class="js-pain">Publish flow works fine. But the post-publish moment is a missed opportunity — no guidance on what to expect.</div></div>
+        <div class="js-score score-good">Neutral</div>
+      </div>
+      <div class="journey-step bad">
+        <div class="js-step">Step 2</div>
+        <div><div class="js-action">Checks analytics — first hour</div><div class="js-pain">200 impressions. Is that good? Bad? There's no benchmark. Raw numbers without context create anxiety, not insight.</div></div>
+        <div class="js-score score-bad">Bad</div>
+      </div>
+      <div class="journey-step neutral">
+        <div class="js-step">Step 3</div>
+        <div><div class="js-action">Receives like/comment notifications</div><div class="js-pain">Pulls her back into the app but teaches nothing. No prompt to engage strategically. No signal that early engagement boosts distribution.</div></div>
+        <div class="js-score score-neutral">Neutral</div>
+      </div>
+      <div class="journey-step bad">
+        <div class="js-step">Step 4</div>
+        <div><div class="js-action">Opens Creator Analytics</div><div class="js-pain">Impressions, clicks, reactions — accurate but not actionable. No topic breakdown. No comparison to what worked before. A dead end.</div></div>
+        <div class="js-score score-bad">Bad</div>
+      </div>
+      <div class="journey-step bad">
+        <div class="js-step">Step 5</div>
+        <div><div class="js-action">Decides what to post next</div><div class="js-pain">No suggestions based on past performance. No prompt. No insight. The gap between posts is where momentum dies.</div></div>
+        <div class="js-score score-bad">Bad</div>
+      </div>
+      <div class="journey-step verybad">
+        <div class="js-step">Step 6</div>
+        <div><div class="js-action">Drop-off</div><div class="js-pain">Posts less. Eventually stops checking analytics. Creator Mode is still on but Maya has functionally churned.</div></div>
+        <div class="js-score score-verybad">Failure</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCORECARD -->
+  <div id="li-scorecard" class="phase fade-up">
+    <div class="phase-label">Phase 4 — Pain point scorecard</div>
+    <table class="scorecard-table">
+      <thead><tr><th>User goal</th><th>User action</th><th>Score</th><th>Pain point</th><th>Idea</th></tr></thead>
+      <tbody>
+        <tr><td>Understand if my post is working</td><td>Check analytics after publishing</td><td><span class="js-score score-bad">Bad</span></td><td>Raw numbers with no benchmark or context</td><td>Show performance vs creator's own average</td></tr>
+        <tr><td>Know what content to create next</td><td>Review past post performance</td><td><span class="js-score score-bad">Bad</span></td><td>No topic-level performance breakdown</td><td>Topic tagging + performance by topic</td></tr>
+        <tr><td>Stay motivated to keep posting</td><td>Return to post consistently</td><td><span class="js-score score-bad">Bad</span></td><td>No feedback loop between posts</td><td>Weekly creator digest with personalized insights</td></tr>
+        <tr><td>Engage with audience effectively</td><td>Respond to comments</td><td><span class="js-score score-neutral">Neutral</span></td><td>No guidance on how engagement affects distribution</td><td>Prompt to reply within first hour with tip</td></tr>
+        <tr><td>Plan content calendar</td><td>Schedule future posts</td><td><span class="js-score score-bad">Bad</span></td><td>No content planning tools beyond basic scheduling</td><td>Editorial calendar with suggested posting windows</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SOLUTIONS -->
+  <div id="li-solutions" class="phase fade-up">
+    <div class="phase-label">Phase 5 — Solutions + hypotheses</div>
+    <div class="solutions-grid">
+      <div class="solution-card">
+        <div class="sol-priority">Priority 1 · Ship first</div>
+        <div class="sol-title">Post performance benchmark card</div>
+        <div class="sol-desc">Immediately after publishing show the post's performance vs the creator's own average across their last 10 posts. "Your last 5 posts averaged 180 impressions in the first hour. This post has 340."</div>
+        <div class="sol-hypothesis"><strong>Hypothesis</strong>If creators see their post benchmarked against their own average immediately after publishing, posting frequency will increase 20% in 30 days because creators will understand what good looks like for them specifically.</div>
+      </div>
+      <div class="solution-card">
+        <div class="sol-priority">Priority 1 · Ship first</div>
+        <div class="sol-title">Weekly creator digest</div>
+        <div class="sol-desc">Every Monday: top performing post from last week, engagement rate vs average, best day and time for their specific audience, one actionable suggestion for the week ahead.</div>
+        <div class="sol-hypothesis"><strong>Hypothesis</strong>If creators receive a weekly personalized digest, posting frequency will increase by at least once more per week because the digest provides insight and social proof of what peers are doing.</div>
+      </div>
+      <div class="solution-card">
+        <div class="sol-priority">Priority 2 · Phase 2</div>
+        <div class="sol-title">Topic tagging + performance history</div>
+        <div class="sol-desc">Allow creators to tag posts by topic. After 10 posts surface a breakdown: "Posts about career advice average 2x more engagement than posts about product strategy for your audience."</div>
+        <div class="sol-hypothesis"><strong>Hypothesis</strong>If creators can see which topics resonate with their specific audience, content quality and posting frequency will both increase because creators have a clear signal about what to write next.</div>
+      </div>
+      <div class="solution-card">
+        <div class="sol-priority">Priority 3 · Phase 3</div>
+        <div class="sol-title">Creator home dashboard</div>
+        <div class="sol-desc">A creator-specific home view that surfaces insights, suggested topics, and posting streaks in one place. Less push notification, more pull — creators who open the app see their data front and center.</div>
+        <div class="sol-hypothesis"><strong>Hypothesis</strong>If creators have a dedicated home view that surfaces actionable insights every time they open LinkedIn, daily active usage among Creator Mode users will increase 30%.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MVP -->
+  <div id="li-mvp" class="phase fade-up">
+    <div class="phase-label">Phase 6 — MVP + go-to-market</div>
+    <div class="mvp-changes">
+      <div class="mvp-change">
+        <div class="mvp-num">1</div>
+        <div class="mvp-content">
+          <div class="mvp-title">Post-publish benchmark card</div>
+          <div class="mvp-desc">Appears immediately after publishing. Shows performance in the first hour compared to creator's own average across last 10 posts. No external benchmarks — just the creator's own data in context. Edge case: fewer than 5 posts → show a message explaining how many more are needed before benchmarks activate.</div>
+        </div>
+      </div>
+      <div class="mvp-change">
+        <div class="mvp-num">2</div>
+        <div class="mvp-content">
+          <div class="mvp-title">Weekly creator digest</div>
+          <div class="mvp-desc">Sent every Monday to Creator Mode users who posted at least once in the last 30 days. Top performing post, engagement rate vs average, and one actionable suggestion. Not sent to users who have not posted in 30 days — they have already churned and a digest email will feel irrelevant.</div>
+        </div>
+      </div>
+    </div>
+    <div class="gtm-box">
+      <div class="gtm-title">Go-to-market strategy</div>
+      <div class="gtm-items">
+        <div class="gtm-item"><div class="gtm-item-label">Launch audience</div><div class="gtm-item-value">Creator Mode users who have posted 5–20 times — active enough for benchmark data, not so active they have their own system</div></div>
+        <div class="gtm-item"><div class="gtm-item-label">Messaging</div><div class="gtm-item-value">"Your creator insights are ready" — not new feature language. Frame as surfacing data that was always there.</div></div>
+        <div class="gtm-item"><div class="gtm-item-label">Launch channel</div><div class="gtm-item-value">In-app notification to pilot group before any external announcement</div></div>
+        <div class="gtm-item"><div class="gtm-item-label">Success metric</div><div class="gtm-item-value">15%+ increase in posting frequency in 30 days post-launch vs 30 days pre-launch → roll out to all Creator Mode users</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NOTION TEARDOWN -->
+<section id="td-no" class="teardown">
+  <button class="back-btn" onclick="showHome()">← All teardowns</button>
+  <div class="td-header">
+    <div class="td-title-block">
+      <div class="td-app-name" style="color:#fff">Notion</div>
+      <p class="td-subtitle">35M+ users. The most powerful note-taking app ever built. And somehow, most new users quit before they build anything useful.</p>
+      <div class="td-meta">
+        <span class="td-badge">Activation</span>
+        <span class="td-badge">Onboarding</span>
+        <span class="td-badge">Improvement teardown</span>
+      </div>
+    </div>
+    <div class="td-nav">
+      <button class="td-nav-item active" onclick="showPhase('no','overview')"><span class="step-num">01</span> Overview</button>
+      <button class="td-nav-item" onclick="showPhase('no','personas')"><span class="step-num">02</span> Personas</button>
+      <button class="td-nav-item" onclick="showPhase('no','journey')"><span class="step-num">03</span> User journey</button>
+      <button class="td-nav-item" onclick="showPhase('no','scorecard')"><span class="step-num">04</span> Pain points</button>
+      <button class="td-nav-item" onclick="showPhase('no','solutions')"><span class="step-num">05</span> Solutions</button>
+      <button class="td-nav-item" onclick="showPhase('no','mvp')"><span class="step-num">06</span> MVP + GTM</button>
+    </div>
+  </div>
+
+  <div id="no-overview" class="phase active fade-up">
+    <div class="phase-label">Phase 1 — Overview</div>
+    <div class="overview-grid">
+      <div class="ov-card">
+        <div class="ov-card-title">What is Notion</div>
+        <div class="ov-card-text">All-in-one workspace combining notes, docs, databases, and project management. 35M+ users. Free tier drives top-of-funnel. Converts to paid when teams need collaboration or hit storage limits.</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-card-title">The activation problem</div>
+        <div class="ov-card-text">Users who do not create something meaningful in their first 7 days are significantly less likely to return. The product can do everything — which means new users do not know where to start.</div>
+      </div>
+    </div>
+    <div class="problem-box" style="border-color:#888;background:rgba(255,255,255,0.03)">
+      <p><strong>The hypothesis:</strong> Based on publicly available user feedback and product analysis, new users appear to struggle with the blank canvas — they sign up expecting a better Google Docs and leave before ever building anything useful. This teardown explores what the activation failure looks like and how to fix it.</p>
+    </div>
+  </div>
+
+  <div id="no-personas" class="phase fade-up">
+    <div class="phase-label">Phase 2 — User personas</div>
+    <div class="personas-grid">
+      <div class="persona-card persona-primary">
+        <span class="persona-primary-badge">Primary focus</span>
+        <div class="persona-avatar" style="background:rgba(255,255,255,0.08);color:#fff">A</div>
+        <div class="persona-name">Alex, 24</div>
+        <div class="persona-role">Recent grad · Productivity seeker</div>
+        <div class="persona-quote">"I know it can do a lot but I do not know what to do first. The blank page is terrifying."</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-avatar" style="background:rgba(255,255,255,0.06);color:#888">S</div>
+        <div class="persona-name">Sarah, 31</div>
+        <div class="persona-role">Marketing manager · Note taker</div>
+        <div class="persona-quote">"Every time I try to do something more advanced I give up halfway through."</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-avatar" style="background:rgba(255,255,255,0.06);color:#888">D</div>
+        <div class="persona-name">David, 28</div>
+        <div class="persona-role">Founder · Power user</div>
+        <div class="persona-quote">"Every time I add someone to our workspace I have to give them a 30-minute tutorial."</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="no-journey" class="phase fade-up">
+    <div class="phase-label">Phase 3 — User journey (signup → drop-off)</div>
+    <div class="journey-steps">
+      <div class="journey-step good">
+        <div class="js-step">Step 1</div>
+        <div><div class="js-action">Signup with Google</div><div class="js-pain">Clean, fast. Notion asks what Alex will use it for. Right first step.</div></div>
+        <div class="js-score score-good">Good</div>
+      </div>
+      <div class="journey-step bad">
+        <div class="js-step">Step 2</div>
+        <div><div class="js-action">Template gallery</div><div class="js-pain">Hundreds of templates. Alex clicks through 8, cannot decide, closes the gallery without selecting anything. Choice overload is real.</div></div>
+        <div class="js-score score-bad">Bad</div>
+      </div>
+      <div class="journey-step verybad">
+        <div class="js-step">Step 3</div>
+        <div><div class="js-action">Blank workspace</div><div class="js-pain">Alex is dropped into a blank canvas with a link to comprehensive, overwhelming documentation. The single biggest activation killer in Notion.</div></div>
+        <div class="js-score score-verybad">Very bad</div>
+      </div>
+      <div class="journey-step neutral">
+        <div class="js-step">Step 4</div>
+        <div><div class="js-action">Tries to create a database</div><div class="js-pain">Gets confused by properties and views. Closes the tab. Basic notes work fine. Everything beyond that hits a wall.</div></div>
+        <div class="js-score score-neutral">Neutral→Bad</div>
+      </div>
+      <div class="journey-step bad">
+        <div class="js-step">Step 5</div>
+        <div><div class="js-action">Return visit</div><div class="js-pain">Workspace looks exactly as he left it. No prompt. No suggestion. No progress indicator. Notion has learned nothing about Alex.</div></div>
+        <div class="js-score score-bad">Bad</div>
+      </div>
+      <div class="journey-step verybad">
+        <div class="js-step">Step 6</div>
+        <div><div class="js-action">Drop-off</div><div class="js-pain">Alex uses Notion as a slightly better notepad. Activation never happened. Technically a user, functionally churned.</div></div>
+        <div class="js-score score-verybad">Failure</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="no-scorecard" class="phase fade-up">
+    <div class="phase-label">Phase 4 — Pain point scorecard</div>
+    <table class="scorecard-table">
+      <thead><tr><th>User goal</th><th>User action</th><th>Score</th><th>Pain point</th><th>Idea</th></tr></thead>
+      <tbody>
+        <tr><td>Find the right starting point</td><td>Browse template gallery</td><td><span class="js-score score-bad">Bad</span></td><td>Choice overload — too many templates with no recommendation</td><td>3-template recommendation based on stated use case</td></tr>
+        <tr><td>Create something useful</td><td>Start from blank canvas</td><td><span class="js-score score-verybad">Very bad</span></td><td>Blank canvas intimidates new users into inaction</td><td>Guided first page with structured prompts</td></tr>
+        <tr><td>Learn Notion without reading docs</td><td>Explore the product</td><td><span class="js-score score-bad">Bad</span></td><td>Help docs assume existing knowledge</td><td>Contextual tooltips triggered by behavior</td></tr>
+        <tr><td>Come back and make progress</td><td>Return to workspace</td><td><span class="js-score score-bad">Bad</span></td><td>No progress signal or next step on return</td><td>Onboarding checklist with milestone rewards</td></tr>
+        <tr><td>Build something more advanced</td><td>Try databases</td><td><span class="js-score score-bad">Bad</span></td><td>Database creation has too many steps and decisions</td><td>Simplified database setup with one-click templates</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="no-solutions" class="phase fade-up">
+    <div class="phase-label">Phase 5 — Solutions + hypotheses</div>
+    <div class="solutions-grid">
+      <div class="solution-card">
+        <div class="sol-priority">Priority 1 · Ship first</div>
+        <div class="sol-title">Use case based template recommendation</div>
+        <div class="sol-desc">After selecting use case at signup, show exactly 3 templates with a one-line explanation of why each fits. Remove the full gallery from the onboarding flow. Let users explore it later when they know what they are doing.</div>
+        <div class="sol-hypothesis"><strong>Hypothesis</strong>If new users see 3 curated recommendations instead of the full gallery, template adoption in the first session will increase 40% because the decision is simplified from hundreds to three concrete options.</div>
+      </div>
+      <div class="solution-card">
+        <div class="sol-priority">Priority 1 · Ship first</div>
+        <div class="sol-title">Guided first page with prompts</div>
+        <div class="sol-desc">Replace the blank canvas with a structured first page for new users. 4 prompts that fade as the user fills them in. Users who want blank canvas can clear prompts in one click.</div>
+        <div class="sol-hypothesis"><strong>Hypothesis</strong>If new users land on a guided first page, pages created in the first session will increase 50% because the prompts reduce the activation energy required to start.</div>
+      </div>
+      <div class="solution-card">
+        <div class="sol-priority">Priority 1 · Ship first</div>
+        <div class="sol-title">Onboarding checklist in sidebar</div>
+        <div class="sol-desc">Persistent but dismissable checklist. 5 items. Each links to a specific action. Disappears after 30 days or all items are checked.</div>
+        <div class="sol-hypothesis"><strong>Hypothesis</strong>If new users have an onboarding checklist, return visit rate in the first 14 days will increase 30% because the checklist gives users a clear reason to come back.</div>
+      </div>
+      <div class="solution-card">
+        <div class="sol-priority">Priority 2 · Phase 2</div>
+        <div class="sol-title">Setup wizard</div>
+        <div class="sol-desc">A 3-step wizard walking new users through creating their first page, their first database, and their first linked view. Short, opinionated, with a clear end state.</div>
+        <div class="sol-hypothesis"><strong>Hypothesis</strong>If new users go through a 3-step setup wizard, activation rate measured by pages created in the first 7 days will increase 35%.</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="no-mvp" class="phase fade-up">
+    <div class="phase-label">Phase 6 — MVP + go-to-market</div>
+    <div class="mvp-changes">
+      <div class="mvp-change">
+        <div class="mvp-num">1</div>
+        <div class="mvp-content">
+          <div class="mvp-title">3-template recommendation screen</div>
+          <div class="mvp-desc">Replace the template gallery in onboarding with 3 curated recommendations based on stated use case. Add "Browse all templates" link at the bottom. The full gallery stays — just moved out of the critical onboarding path.</div>
+        </div>
+      </div>
+      <div class="mvp-change">
+        <div class="mvp-num">2</div>
+        <div class="mvp-content">
+          <div class="mvp-title">Guided first page</div>
+          <div class="mvp-desc">4 structured prompts for new users that fade as they are filled in. Users who want blank canvas clear them in one click. Returning users and users creating new workspaces bypass this entirely.</div>
+        </div>
+      </div>
+      <div class="mvp-change">
+        <div class="mvp-num">3</div>
+        <div class="mvp-content">
+          <div class="mvp-title">Sidebar onboarding checklist</div>
+          <div class="mvp-desc">5 items linking to specific actions. Disappears after 30 days or completion. Users who dismiss it do not see it again.</div>
+        </div>
+      </div>
+    </div>
+    <div class="gtm-box">
+      <div class="gtm-title">Go-to-market strategy</div>
+      <div class="gtm-items">
+        <div class="gtm-item"><div class="gtm-item-label">Test method</div><div class="gtm-item-value">A/B test new onboarding vs current for all new signups. 50/50 split for 4 weeks.</div></div>
+        <div class="gtm-item"><div class="gtm-item-label">Primary metric</div><div class="gtm-item-value">Pages created in first 7 days</div></div>
+        <div class="gtm-item"><div class="gtm-item-label">Secondary metric</div><div class="gtm-item-value">30-day retention rate</div></div>
+        <div class="gtm-item"><div class="gtm-item-label">Ship threshold</div><div class="gtm-item-value">20%+ increase in pages created in first 7 days → roll out to 100% of new users</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAZE TEARDOWN -->
+<section id="td-wz" class="teardown">
+  <button class="back-btn" onclick="showHome()">← All teardowns</button>
+  <div class="td-header">
+    <div class="td-title-block">
+      <div class="td-app-name" style="color:#33CCFF">Waze</div>
+      <p class="td-subtitle">The entire competitive moat is community reporting. And the people who report most are quietly losing motivation.</p>
+      <div class="td-meta">
+        <span class="td-badge">Retention</span>
+        <span class="td-badge">Community reporting</span>
+        <span class="td-badge">Improvement teardown</span>
+      </div>
+    </div>
+    <div class="td-nav">
+      <button class="td-nav-item active" onclick="showPhase('wz','overview')"><span class="step-num">01</span> Overview</button>
+      <button class="td-nav-item" onclick="showPhase('wz','personas')"><span class="step-num">02</span> Personas</button>
+      <button class="td-nav-item" onclick="showPhase('wz','journey')"><span class="step-num">03</span> User journey</button>
+      <button class="td-nav-item" onclick="showPhase('wz','scorecard')"><span class="step-num">04</span> Pain points</button>
+      <button class="td-nav-item" onclick="showPhase('wz','solutions')"><span class="step-num">05</span> Solutions</button>
+      <button class="td-nav-item" onclick="showPhase('wz','mvp')"><span class="step-num">06</span> MVP + GTM</button>
+    </div>
+  </div>
+
+  <div id="wz-overview" class="phase active fade-up">
+    <div class="phase-label">Phase 1 — Overview</div>
+    <div class="overview-grid">
+      <div class="ov-card">
+        <div class="ov-card-title">What is Waze</div>
+        <div class="ov-card-text">Community-based navigation app. 140M+ monthly active users. Revenue from map advertising and data licensing. Owned by Google since 2013. The only differentiator vs Google Maps is the community reporting system.</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-card-title">Why this matters</div>
+        <div class="ov-card-text">Remove the reporters and Waze becomes an inferior version of Google Maps with a worse base map. The community is not a feature — it is the entire product thesis. Losing committed reporters is an existential risk.</div>
+      </div>
+    </div>
+    <div class="problem-box" style="border-color:#33CCFF;background:rgba(51,204,255,0.05)">
+      <p><strong>The hypothesis:</strong> Active reporting appears to be declining on a per-user basis based on publicly discussed patterns. Waze has grown its user base but the ratio of reporters to passengers may be shifting toward passengers. This teardown explores what is driving reporter disengagement and what to build to fix it.</p>
+    </div>
+  </div>
+
+  <div id="wz-personas" class="phase fade-up">
+    <div class="phase-label">Phase 2 — User personas</div>
+    <div class="personas-grid">
+      <div class="persona-card persona-primary">
+        <span class="persona-primary-badge">Primary focus</span>
+        <div class="persona-avatar" style="background:rgba(51,204,255,0.15);color:#33CCFF">M</div>
+        <div class="persona-name">Marcus, 38</div>
+        <div class="persona-role">Daily commuter · Committed reporter</div>
+        <div class="persona-quote">"I feel like I am doing a lot for this app and the app has not done much for me lately. The points do not mean anything."</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-avatar" style="background:rgba(255,255,255,0.06);color:#888">D</div>
+        <div class="persona-name">Diana, 29</div>
+        <div class="persona-role">Daily commuter · Occasional reporter</div>
+        <div class="persona-quote">"I want to contribute but not if it means taking my eyes off the road for 10 seconds."</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-avatar" style="background:rgba(255,255,255,0.06);color:#888">K</div>
+        <div class="persona-name">Kevin, 33</div>
+        <div class="persona-role">Daily commuter · Passenger</div>
+        <div class="persona-quote">No frustration — he is getting value without contributing. Waze has never given him a reason to change that.</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="wz-journey" class="phase fade-up">
+    <div class="phase-label">Phase 3 — User journey (seeing something → reporting it)</div>
+    <div class="journey-steps">
+      <div class="journey-step bad">
+        <div class="js-step">Step 1</div>
+        <div><div class="js-action">Marcus sees something worth reporting</div><div class="js-pain">Has to take eyes off road to find the report button. Not always immediately visible depending on map state.</div></div>
+        <div class="js-score score-bad">Bad</div>
+      </div>
+      <div class="journey-step neutral">
+        <div class="js-step">Step 2</div>
+        <div><div class="js-action">Taps report button → selects category</div><div class="js-pain">Two taps to reach the category. Manageable but not hands-free.</div></div>
+        <div class="js-score score-neutral">Neutral</div>
+      </div>
+      <div class="journey-step bad">
+        <div class="js-step">Step 3</div>
+        <div><div class="js-action">Sub-category selection</div><div class="js-pain">A third tap for sub-category — "on my side, other side, both sides." Too much cognitive load while driving. This is where most reports are abandoned.</div></div>
+        <div class="js-score score-bad">Bad</div>
+      </div>
+      <div class="journey-step neutral">
+        <div class="js-step">Step 4</div>
+        <div><div class="js-action">Report submitted</div><div class="js-pain">Brief animation and small points reward. The points feel trivial relative to the effort required.</div></div>
+        <div class="js-score score-neutral">Neutral</div>
+      </div>
+      <div class="journey-step bad">
+        <div class="js-step">Step 5</div>
+        <div><div class="js-action">Long-term recognition</div><div class="js-pain">Marcus has a Local Expert badge. Nobody outside Waze knows it exists. Inside Waze the progression has not changed in 2 years. He has hit a ceiling.</div></div>
+        <div class="js-score score-bad">Bad</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="wz-scorecard" class="phase fade-up">
+    <div class="phase-label">Phase 4 — Pain point scorecard</div>
+    <table class="scorecard-table">
+      <thead><tr><th>User goal</th><th>User action</th><th>Score</th><th>Pain point</th><th>Idea</th></tr></thead>
+      <tbody>
+        <tr><td>Submit a report safely while driving</td><td>Tap through report categories</td><td><span class="js-score score-bad">Bad</span></td><td>3 taps minimum creates distraction risk</td><td>One-tap contextual report with AI category detection</td></tr>
+        <tr><td>Feel recognized for contributing</td><td>Check points and badges</td><td><span class="js-score score-bad">Bad</span></td><td>Reward ceiling has not grown in years</td><td>New reporter tiers with meaningful milestones</td></tr>
+        <tr><td>Know my reports helped</td><td>Review report confirmations</td><td><span class="js-score score-bad">Bad</span></td><td>Confirmation data not surfaced meaningfully</td><td>Weekly reporter impact summary</td></tr>
+        <tr><td>Get credit outside Waze</td><td>Share achievements externally</td><td><span class="js-score score-bad">Bad</span></td><td>Waze achievements have no external visibility</td><td>LinkedIn-shareable reporter credential</td></tr>
+        <tr><td>Use voice to report hands-free</td><td>Use voice reporting</td><td><span class="js-score score-bad">Bad</span></td><td>Voice reporting is unreliable and hard to discover</td><td>Redesigned voice-first reporting flow</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="wz-solutions" class="phase fade-up">
+    <div class="phase-label">Phase 5 — Solutions + hypotheses</div>
+    <div class="solutions-grid">
+      <div class="solution-card">
+        <div class="sol-priority">Priority 1 · Ship first</div>
+        <div class="sol-title">One-tap contextual report</div>
+        <div class="sol-desc">Use GPS data to pre-populate the most likely report type based on context. If Waze detects slowing near a location where police are frequently reported, the button changes to a one-tap "Police ahead?" confirmation.</div>
+        <div class="sol-hypothesis"><strong>Hypothesis</strong>If reporting is reduced to one contextual tap, submission rate among active reporters will increase 35% because friction reduction converts abandoned reports into submitted ones.</div>
+      </div>
+      <div class="solution-card">
+        <div class="sol-priority">Priority 1 · Ship first</div>
+        <div class="sol-title">Weekly reporter impact summary</div>
+        <div class="sol-desc">Every Monday: how many drivers were warned by your reports, how many confirmed them, your most impactful report of the week. Specific numbers, one paragraph, no fluff.</div>
+        <div class="sol-hypothesis"><strong>Hypothesis</strong>If reporters receive a weekly impact summary, reporting frequency will increase 20% because knowing you helped real people is the strongest long-term driver of contribution behavior.</div>
+      </div>
+      <div class="solution-card">
+        <div class="sol-priority">Priority 1 · Ship first</div>
+        <div class="sol-title">New reporter tiers</div>
+        <div class="sol-desc">Regional Guardian at 25,000 points, City Champion at 75,000 points. Monthly city leaderboard showing top 10 reporters in each metro area that resets monthly so there is always a fresh competition.</div>
+        <div class="sol-hypothesis"><strong>Hypothesis</strong>If new milestones exist above Local Expert, reporting frequency among users who hit the current ceiling will increase 25% because the motivation to progress returns.</div>
+      </div>
+      <div class="solution-card">
+        <div class="sol-priority">Priority 2 · Phase 2</div>
+        <div class="sol-title">Voice-first reporting redesign</div>
+        <div class="sol-desc">Make voice reporting the primary method with a simple, consistent phrase — "Hey Waze, police on my right" — that works reliably every time. Rebuilt specifically for the 8 most common report types.</div>
+        <div class="sol-hypothesis"><strong>Hypothesis</strong>If voice reporting works reliably with natural language, hands-free submissions will increase 50% among drivers who currently use the tap interface.</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="wz-mvp" class="phase fade-up">
+    <div class="phase-label">Phase 6 — MVP + go-to-market</div>
+    <div class="mvp-changes">
+      <div class="mvp-change">
+        <div class="mvp-num">1</div>
+        <div class="mvp-content">
+          <div class="mvp-title">Contextual one-tap reporting</div>
+          <div class="mvp-desc">For the 3 most common report types — police, accident, hazard. Pre-populates based on GPS context. One tap submits. Full sub-category menu remains for drivers who want specificity. Edge case: low reporter density areas do not get pre-population (insufficient historical data).</div>
+        </div>
+      </div>
+      <div class="mvp-change">
+        <div class="mvp-num">2</div>
+        <div class="mvp-content">
+          <div class="mvp-title">Weekly reporter impact summary</div>
+          <div class="mvp-desc">Sent every Monday to users who submitted at least 3 reports in the previous week. Below 3 reports the numbers are too small to feel meaningful — threshold is intentional.</div>
+        </div>
+      </div>
+      <div class="mvp-change">
+        <div class="mvp-num">3</div>
+        <div class="mvp-content">
+          <div class="mvp-title">Two new reporter tiers + monthly leaderboard</div>
+          <div class="mvp-desc">Regional Guardian (25K points) and City Champion (75K points) with visible badges. Monthly city leaderboard top 10 that resets so there is always a fresh competition to win.</div>
+        </div>
+      </div>
+    </div>
+    <div class="gtm-box">
+      <div class="gtm-title">Go-to-market strategy</div>
+      <div class="gtm-items">
+        <div class="gtm-item"><div class="gtm-item-label">Launch audience</div><div class="gtm-item-value">Top 10% of reporters by activity in 5 test cities</div></div>
+        <div class="gtm-item"><div class="gtm-item-label">Channel</div><div class="gtm-item-value">Waze community forums and editor community — most active reporters are already there</div></div>
+        <div class="gtm-item"><div class="gtm-item-label">Primary metric</div><div class="gtm-item-value">Reporting frequency: 30 days post-launch vs 30 days pre-launch</div></div>
+        <div class="gtm-item"><div class="gtm-item-label">Ship threshold</div><div class="gtm-item-value">15%+ increase in reporting frequency in test cities → global rollout</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FIGMA TEARDOWN -->
+<section id="td-fg" class="teardown">
+  <button class="back-btn" onclick="showHome()">← All teardowns</button>
+  <div class="td-header">
+    <div class="td-title-block">
+      <div class="td-app-name" style="color:#F24E1E">Figma</div>
+      <p class="td-subtitle">One of the most generous free tiers in software. Which is exactly why active daily users never upgrade.</p>
+      <div class="td-meta">
+        <span class="td-badge">Revenue</span>
+        <span class="td-badge">Freemium conversion</span>
+        <span class="td-badge">Improvement teardown</span>
+      </div>
+    </div>
+    <div class="td-nav">
+      <button class="td-nav-item active" onclick="showPhase('fg','overview')"><span class="step-num">01</span> Overview</button>
+      <button class="td-nav-item" onclick="showPhase('fg','personas')"><span class="step-num">02</span> Personas</button>
+      <button class="td-nav-item" onclick="showPhase('fg','journey')"><span class="step-num">03</span> User journey</button>
+      <button class="td-nav-item" onclick="showPhase('fg','scorecard')"><span class="step-num">04</span> Pain points</button>
+      <button class="td-nav-item" onclick="showPhase('fg','solutions')"><span class="step-num">05</span> Solutions</button>
+      <button class="td-nav-item" onclick="showPhase('fg','mvp')"><span class="step-num">06</span> MVP + GTM</button>
+    </div>
+  </div>
+
+  <div id="fg-overview" class="phase active fade-up">
+    <div class="phase-label">Phase 1 — Overview</div>
+    <div class="overview-grid">
+      <div class="ov-card">
+        <div class="ov-card-title">What is Figma</div>
+        <div class="ov-card-text">Browser-based collaborative design tool. Dominant in product design. Free tier: unlimited editors, unlimited collaborators, 3 project limit. Professional tier: $12/editor/month. Organization: $45/editor/month.</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-card-title">The conversion problem</div>
+        <div class="ov-card-text">The 3-project limit is a friction point but not a pain point. Teams work around it by reorganizing existing projects rather than paying to remove the constraint. The free tier is good enough to never upgrade.</div>
+      </div>
+    </div>
+    <div class="problem-box" style="border-color:#F24E1E;background:rgba(242,78,30,0.05)">
+      <p><strong>The hypothesis:</strong> Free tier users are performing Professional-level work with manual workarounds every week — branching files manually, managing version history by hand — and Figma has no mechanism to show them this is happening or offer a better path. The upgrade prompt fires at the wrong moment (frustration) rather than desire.</p>
+    </div>
+  </div>
+
+  <div id="fg-personas" class="phase fade-up">
+    <div class="phase-label">Phase 2 — User personas</div>
+    <div class="personas-grid">
+      <div class="persona-card persona-primary">
+        <span class="persona-primary-badge">Primary focus</span>
+        <div class="persona-avatar" style="background:rgba(242,78,30,0.15);color:#F24E1E">E</div>
+        <div class="persona-name">Elena, 27</div>
+        <div class="persona-role">Sole designer at startup · Free tier power user</div>
+        <div class="persona-quote">"I know I am doing workarounds but they are not bad enough to justify $12/month. If Figma showed me something I actually needed behind the paywall I might reconsider."</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-avatar" style="background:rgba(255,255,255,0.06);color:#888">C</div>
+        <div class="persona-name">Carlos, 34</div>
+        <div class="persona-role">Design lead at 30-person startup</div>
+        <div class="persona-quote">"I know we should pay for it. I just have not had the conversation with finance yet. Nothing has forced the issue."</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-avatar" style="background:rgba(255,255,255,0.06);color:#888">P</div>
+        <div class="persona-name">Priya, 29</div>
+        <div class="persona-role">Frontend engineer · Free collaborator</div>
+        <div class="persona-quote">No frustration — gets exactly what she needs for free. Will never pay for Figma and has no reason to.</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="fg-journey" class="phase fade-up">
+    <div class="phase-label">Phase 3 — User journey (hitting the limit → staying free)</div>
+    <div class="journey-steps">
+      <div class="journey-step neutral">
+        <div class="js-step">Step 1</div>
+        <div><div class="js-action">Elena hits 3-project limit</div><div class="js-pain">Figma shows a modal explaining the limit and the Professional tier price. Elena's response: close modal, reorganize existing projects. Not upgrade.</div></div>
+        <div class="js-score score-neutral">Neutral</div>
+      </div>
+      <div class="journey-step bad">
+        <div class="js-step">Step 2</div>
+        <div><div class="js-action">Explores Professional tier features</div><div class="js-pain">Clicks "Learn more," lands on pricing page. Features listed abstractly. "Unlimited version history" sounds good but Elena has never hit a version history problem. No felt need.</div></div>
+        <div class="js-score score-bad">Bad</div>
+      </div>
+      <div class="journey-step verybad">
+        <div class="js-step">Step 3</div>
+        <div><div class="js-action">Decides not to upgrade</div><div class="js-pain">Closes pricing page. Reorganizes existing projects. No follow-up from Figma. The conversion opportunity is lost with zero re-engagement mechanism.</div></div>
+        <div class="js-score score-verybad">Very bad</div>
+      </div>
+      <div class="journey-step verybad">
+        <div class="js-step">Step 4</div>
+        <div><div class="js-action">Manually works around missing features</div><div class="js-pain">Elena duplicates a file, makes changes, spends 20 minutes merging them back. The branching feature would do this automatically — but it is Professional and Elena has never seen it.</div></div>
+        <div class="js-score score-verybad">Very bad</div>
+      </div>
+      <div class="journey-step verybad">
+        <div class="js-step">Step 5</div>
+        <div><div class="js-action">No re-engagement after declined upgrade</div><div class="js-pain">Figma sends nothing. No email. No in-product prompt when she does manual workarounds. No trial offer. The funnel ends at the declined modal.</div></div>
+        <div class="js-score score-verybad">Failure</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="fg-scorecard" class="phase fade-up">
+    <div class="phase-label">Phase 4 — Pain point scorecard</div>
+    <table class="scorecard-table">
+      <thead><tr><th>User goal</th><th>User action</th><th>Score</th><th>Pain point</th><th>Idea</th></tr></thead>
+      <tbody>
+        <tr><td>Keep working at the project limit</td><td>Reorganize existing projects</td><td><span class="js-score score-bad">Bad</span></td><td>Upgrade prompt fires at frustration, not desire</td><td>Move upgrade prompt to moments of workflow pain</td></tr>
+        <tr><td>Understand what Professional offers</td><td>Read pricing page</td><td><span class="js-score score-bad">Bad</span></td><td>Features listed abstractly without workflow context</td><td>Outcome-based feature descriptions</td></tr>
+        <tr><td>Try Professional before committing</td><td>Look for trial option</td><td><span class="js-score score-bad">Bad</span></td><td>Trial is buried and not prominently offered</td><td>Make 30-day trial the primary CTA everywhere</td></tr>
+        <tr><td>Solve workflow problems efficiently</td><td>Manually work around missing features</td><td><span class="js-score score-verybad">Very bad</span></td><td>No prompts when Professional features would help</td><td>In-product prompts when workaround behavior detected</td></tr>
+        <tr><td>Get re-engaged after declining</td><td>Wait for follow-up</td><td><span class="js-score score-bad">Bad</span></td><td>No re-engagement after declined upgrade</td><td>2-week email sequence explaining Professional value</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="fg-solutions" class="phase fade-up">
+    <div class="phase-label">Phase 5 — Solutions + hypotheses</div>
+    <div class="solutions-grid">
+      <div class="solution-card">
+        <div class="sol-priority">Priority 1 · Ship first</div>
+        <div class="sol-title">30-day trial as primary CTA</div>
+        <div class="sol-desc">Replace "Upgrade to Professional" with "Try Professional free for 30 days" across all upgrade touch points. Remove credit card requirement for trial activation. Send reminder 5 days before trial ends.</div>
+        <div class="sol-hypothesis"><strong>Hypothesis</strong>If the trial is the primary CTA with no credit card required, trial activation rate will increase 50% because the primary objection — committing before knowing the value — is removed entirely.</div>
+      </div>
+      <div class="solution-card">
+        <div class="sol-priority">Priority 1 · Ship first</div>
+        <div class="sol-title">Outcome-based pricing page</div>
+        <div class="sol-desc">Rewrite pricing page to lead with outcomes. Replace "Unlimited version history" with "Never lose a design decision." Add a section showing the 5 most common free-tier workarounds and the Professional feature that eliminates each one.</div>
+        <div class="sol-hypothesis"><strong>Hypothesis</strong>If the pricing page leads with outcomes Elena recognizes from her workflow, conversion from pricing page visit to trial start will increase 20%.</div>
+      </div>
+      <div class="solution-card">
+        <div class="sol-priority">Priority 2 · Phase 2</div>
+        <div class="sol-title">Contextual upgrade prompts</div>
+        <div class="sol-desc">When Figma detects manual workaround behavior — duplicating files and merging, scrolling through long version history — show a small non-intrusive prompt. "Did you know Professional lets you branch files? Try it free for 30 days."</div>
+        <div class="sol-hypothesis"><strong>Hypothesis</strong>If upgrade prompts appear during moments of workflow pain rather than at the project limit, conversion rate from free to Professional will increase 25%.</div>
+      </div>
+      <div class="solution-card">
+        <div class="sol-priority">Priority 2 · Phase 2</div>
+        <div class="sol-title">Workaround detection engine</div>
+        <div class="sol-desc">File duplication followed by manual merge → surface branching. Scrolling back 30+ versions → surface extended version history. Creating a project called "Archive" → surface project management features.</div>
+        <div class="sol-hypothesis"><strong>Hypothesis</strong>If contextual prompts fire within 5 seconds of workaround behavior, trial activation among active free users will increase 30%.</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="fg-mvp" class="phase fade-up">
+    <div class="phase-label">Phase 6 — MVP + go-to-market</div>
+    <div class="mvp-changes">
+      <div class="mvp-change">
+        <div class="mvp-num">1</div>
+        <div class="mvp-content">
+          <div class="mvp-title">Trial as primary CTA everywhere</div>
+          <div class="mvp-desc">Replace upgrade buttons with "Try free for 30 days" across the project limit modal, pricing page, and any future contextual prompts. No credit card. Email reminder 5 days before trial ends explaining what happens to Professional features if not upgraded.</div>
+        </div>
+      </div>
+      <div class="mvp-change">
+        <div class="mvp-num">2</div>
+        <div class="mvp-content">
+          <div class="mvp-title">Outcome-based pricing page rewrite</div>
+          <div class="mvp-desc">Each Professional feature gets two lines — the feature and the workflow problem it solves. Section at the bottom: "5 workarounds free users do every week and the Professional feature that eliminates each one."</div>
+        </div>
+      </div>
+    </div>
+    <div class="gtm-box">
+      <div class="gtm-title">Go-to-market strategy</div>
+      <div class="gtm-items">
+        <div class="gtm-item"><div class="gtm-item-label">Test method</div><div class="gtm-item-value">A/B test for all free users who encounter an upgrade touch point. 6-week run.</div></div>
+        <div class="gtm-item"><div class="gtm-item-label">Primary metric</div><div class="gtm-item-value">Trial activation rate</div></div>
+        <div class="gtm-item"><div class="gtm-item-label">Secondary metric</div><div class="gtm-item-value">Conversion from trial to paid at 30 days</div></div>
+        <div class="gtm-item"><div class="gtm-item-label">Ship threshold</div><div class="gtm-item-value">20%+ increase in trial activation → ship to 100% + build contextual prompting system</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DUOLINGO TEARDOWN -->
+<section id="td-dl" class="teardown">
+  <button class="back-btn" onclick="showHome()">← All teardowns</button>
+  <div class="td-header">
+    <div class="td-title-block">
+      <div class="td-app-name" style="color:#58CC02">Duolingo</div>
+      <p class="td-subtitle">The streak is one of the most effective retention tools ever built. It is also creating users who are engaged but not learning.</p>
+      <div class="td-meta">
+        <span class="td-badge">Retention</span>
+        <span class="td-badge">Streak mechanic</span>
+        <span class="td-badge">Improvement teardown</span>
+      </div>
+    </div>
+    <div class="td-nav">
+      <button class="td-nav-item active" onclick="showPhase('dl','overview')"><span class="step-num">01</span> Overview</button>
+      <button class="td-nav-item" onclick="showPhase('dl','personas')"><span class="step-num">02</span> Personas</button>
+      <button class="td-nav-item" onclick="showPhase('dl','journey')"><span class="step-num">03</span> User journey</button>
+      <button class="td-nav-item" onclick="showPhase('dl','scorecard')"><span class="step-num">04</span> Pain points</button>
+      <button class="td-nav-item" onclick="showPhase('dl','solutions')"><span class="step-num">05</span> Solutions</button>
+      <button class="td-nav-item" onclick="showPhase('dl','mvp')"><span class="step-num">06</span> MVP + GTM</button>
+    </div>
+  </div>
+
+  <div id="dl-overview" class="phase active fade-up">
+    <div class="phase-label">Phase 1 — Overview</div>
+    <div class="overview-grid">
+      <div class="ov-card">
+        <div class="ov-card-title">What is Duolingo</div>
+        <div class="ov-card-text">Most downloaded education app. 500M+ registered users. 40M+ DAU. Revenue from advertising (free tier) and Super Duolingo subscriptions ($6.99/month). Business model is deeply tied to DAU — more daily users = more ad impressions + more premium conversions.</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-card-title">The streak tension</div>
+        <div class="ov-card-text">The streak rewards consistency of engagement, not quality of engagement. The minimum to maintain a streak is one lesson. Many users complete exactly one lesson and close the app. 200-day streak. Minimal Spanish improvement.</div>
+      </div>
+    </div>
+    <div class="problem-box" style="border-color:#58CC02;background:rgba(88,204,2,0.05)">
+      <p><strong>The hypothesis:</strong> Users with long streaks appear to be optimizing for streak maintenance rather than language learning — choosing the easiest available lesson every day, completing the minimum, and closing the app. When the streak breaks they churn because the streak was the product, not the language. This teardown explores how to fix that without destroying the retention behavior that makes the streak valuable to the business.</p>
+    </div>
+  </div>
+
+  <div id="dl-personas" class="phase fade-up">
+    <div class="phase-label">Phase 2 — User personas</div>
+    <div class="personas-grid">
+      <div class="persona-card persona-primary">
+        <span class="persona-primary-badge">Primary focus</span>
+        <div class="persona-avatar" style="background:rgba(88,204,2,0.15);color:#58CC02">M</div>
+        <div class="persona-name">Michael, 35</div>
+        <div class="persona-role">180-day streak · Streak farmer</div>
+        <div class="persona-quote">"I keep doing it but I am not sure it is working. I just do not want to lose the streak."</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-avatar" style="background:rgba(255,255,255,0.06);color:#888">Y</div>
+        <div class="persona-name">Yuki, 28</div>
+        <div class="persona-role">45-day streak · Motivated learner</div>
+        <div class="persona-quote">"I wish Duolingo told me how ready I actually am for a real French conversation. The lessons feel disconnected from actual speaking."</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-avatar" style="background:rgba(255,255,255,0.06);color:#888">J</div>
+        <div class="persona-name">James, 31</div>
+        <div class="persona-role">0-day streak · Churned learner</div>
+        <div class="persona-quote">"I lost 90 days of progress because of one day traveling. The whole thing felt pointless after that."</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="dl-journey" class="phase fade-up">
+    <div class="phase-label">Phase 3 — User journey (morning session → streak farming)</div>
+    <div class="journey-steps">
+      <div class="journey-step bad">
+        <div class="js-step">Step 1</div>
+        <div><div class="js-action">Opens app — streak counter front and center</div><div class="js-pain">180 days displayed prominently. The lesson recommendation highlights the easiest available option. The product is training Michael to be lazy.</div></div>
+        <div class="js-score score-bad">Bad</div>
+      </div>
+      <div class="journey-step bad">
+        <div class="js-step">Step 2</div>
+        <div><div class="js-action">Selects the recommended lesson</div><div class="js-pain">A review exercise he has done dozens of times. Completed in 4 minutes. Easy lessons protect the streak — which is the goal Michael has internalized.</div></div>
+        <div class="js-score score-bad">Bad</div>
+      </div>
+      <div class="journey-step bad">
+        <div class="js-step">Step 3</div>
+        <div><div class="js-action">Lesson completed — celebration</div><div class="js-pain">Same confetti and XP whether Michael did an easy review or a challenging new unit. No differentiation between high-quality and low-quality engagement.</div></div>
+        <div class="js-score score-bad">Bad</div>
+      </div>
+      <div class="journey-step verybad">
+        <div class="js-step">Step 4</div>
+        <div><div class="js-action">Closes the app</div><div class="js-pain">Streak maintained. Total time: 4 minutes. Michael will not open it again today. This has been his pattern for months.</div></div>
+        <div class="js-score score-verybad">Very bad</div>
+      </div>
+      <div class="journey-step bad">
+        <div class="js-step">Step 5</div>
+        <div><div class="js-action">Weekly progress report</div><div class="js-pain">"You had a great week! 7 lessons completed." Lessons completed is not language learning. Michael feels good about the wrong metric.</div></div>
+        <div class="js-score score-bad">Bad</div>
+      </div>
+      <div class="journey-step verybad">
+        <div class="js-step">Step 6</div>
+        <div><div class="js-action">Streak breaks while traveling</div><div class="js-pain">180 days to zero. Michael buys a streak freeze a day too late. He opens Duolingo the next day feeling demotivated. The streak was the product. When it's gone there's nothing else.</div></div>
+        <div class="js-score score-verybad">Churn risk</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="dl-scorecard" class="phase fade-up">
+    <div class="phase-label">Phase 4 — Pain point scorecard</div>
+    <table class="scorecard-table">
+      <thead><tr><th>User goal</th><th>User action</th><th>Score</th><th>Pain point</th><th>Idea</th></tr></thead>
+      <tbody>
+        <tr><td>Learn the language effectively</td><td>Complete minimum daily lesson</td><td><span class="js-score score-bad">Bad</span></td><td>Easy lesson recommendation reinforces streak farming</td><td>Introduce learning progress score alongside streak</td></tr>
+        <tr><td>Feel rewarded for genuine effort</td><td>Complete a challenging lesson</td><td><span class="js-score score-bad">Bad</span></td><td>Celebration identical for easy and hard lessons</td><td>Differentiated rewards for deep engagement</td></tr>
+        <tr><td>Understand real progress</td><td>Read weekly progress report</td><td><span class="js-score score-bad">Bad</span></td><td>Progress measured in lessons not language ability</td><td>Language ability progress indicator</td></tr>
+        <tr><td>Recover from a missed day</td><td>See streak go to zero</td><td><span class="js-score score-verybad">Very bad</span></td><td>Streak loss is catastrophic with no reframe</td><td>Preserve learning history after streak break</td></tr>
+        <tr><td>Stay motivated long term</td><td>Maintain streak for months</td><td><span class="js-score score-bad">Bad</span></td><td>Streak becomes the goal, replacing language learning</td><td>Conversation readiness score as parallel goal</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="dl-solutions" class="phase fade-up">
+    <div class="phase-label">Phase 5 — Solutions + hypotheses</div>
+    <div class="solutions-grid">
+      <div class="solution-card">
+        <div class="sol-priority">Priority 1 · Ship first</div>
+        <div class="sol-title">Adaptive difficulty recommendation</div>
+        <div class="sol-desc">Change the recommendation algorithm to weight toward challenging content for users with 30+ day streaks. Surface easy review lessons as an option but not as the primary recommendation. Users who have demonstrated consistency should be pushed harder.</div>
+        <div class="sol-hypothesis"><strong>Hypothesis</strong>If the algorithm weights toward challenging content for streak users, course progression rate will increase 25% and language ability scores on benchmark assessments will improve 15%.</div>
+      </div>
+      <div class="solution-card">
+        <div class="sol-priority">Priority 1 · Ship first</div>
+        <div class="sol-title">Monthly language ability check-in</div>
+        <div class="sol-desc">On the first day of each month prompt users with 30+ day streaks to complete a 10-question benchmark assessment. Show how their score changed over the last 3 months. Gives Michael concrete evidence of whether his streak is producing real learning.</div>
+        <div class="sol-hypothesis"><strong>Hypothesis</strong>If users complete a monthly benchmark and see language ability progress over time, 90-day retention will increase 15% because users who can see real progress are more motivated than those who only see streak numbers.</div>
+      </div>
+      <div class="solution-card">
+        <div class="sol-priority">Priority 1 · Ship first</div>
+        <div class="sol-title">Learning history preservation after streak break</div>
+        <div class="sol-desc">When a streak breaks show a new screen: "Your streak is starting over. But your 180 days of learning are still with you." Below it: everything learned — vocabulary, grammar concepts, units completed. Shift the frame from loss to continuity.</div>
+        <div class="sol-hypothesis"><strong>Hypothesis</strong>If users see their learning history preserved after a streak break, churn rate after streak loss events will decrease 30% because the emotional devastation is mitigated by the preservation of real learning history.</div>
+      </div>
+      <div class="solution-card">
+        <div class="sol-priority">Priority 2 · Phase 2</div>
+        <div class="sol-title">Conversation readiness score</div>
+        <div class="sol-desc">A percentage on the home screen estimating how prepared the user is for a basic conversation — based on vocabulary coverage, grammar accuracy, and lesson progression. Updated weekly. The score that actually matters.</div>
+        <div class="sol-hypothesis"><strong>Hypothesis</strong>If users see a Conversation Readiness score measuring actual language ability, session depth will increase 20% because users will engage more seriously when they can see the direct impact on a meaningful outcome.</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="dl-mvp" class="phase fade-up">
+    <div class="phase-label">Phase 6 — MVP + go-to-market</div>
+    <div class="mvp-changes">
+      <div class="mvp-change">
+        <div class="mvp-num">1</div>
+        <div class="mvp-content">
+          <div class="mvp-title">Adaptive difficulty for 30+ day streak users</div>
+          <div class="mvp-desc">Recommendation algorithm weights toward next unmastered unit rather than easiest available review. Easy review lessons remain accessible but labeled "Review" rather than shown as primary recommendation. Edge case: genuine beginners under 30 days see current experience unchanged.</div>
+        </div>
+      </div>
+      <div class="mvp-change">
+        <div class="mvp-num">2</div>
+        <div class="mvp-content">
+          <div class="mvp-title">Monthly language ability check-in</div>
+          <div class="mvp-desc">First day of each month. 10-question benchmark. Results stored and shown as a progress chart. 5 minutes. Skippable but shown prominently. Only for users with 30+ day streaks who have enough history for meaningful comparison.</div>
+        </div>
+      </div>
+      <div class="mvp-change">
+        <div class="mvp-num">3</div>
+        <div class="mvp-content">
+          <div class="mvp-title">Learning history preservation</div>
+          <div class="mvp-desc">When streak breaks: new screen showing everything the user has learned. Frame shifts from "you lost 180 days" to "your 180 days of learning are still with you." The streak resets. The learning does not.</div>
+        </div>
+      </div>
+    </div>
+    <div class="gtm-box">
+      <div class="gtm-title">Go-to-market strategy</div>
+      <div class="gtm-items">
+        <div class="gtm-item"><div class="gtm-item-label">Launch audience</div><div class="gtm-item-value">Users with 60–180 day streaks — long enough for meaningful data, not so long they are the most vocal community members who might resist change</div></div>
+        <div class="gtm-item"><div class="gtm-item-label">Messaging</div><div class="gtm-item-value">"New learning insights" — not "we changed the streak." The streak still exists. Now there is more to the story.</div></div>
+        <div class="gtm-item"><div class="gtm-item-label">Primary metric</div><div class="gtm-item-value">Course progression rate (units completed per week)</div></div>
+        <div class="gtm-item"><div class="gtm-item-label">Secondary metric</div><div class="gtm-item-value">90-day retention after streak break events</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function showHome(){
+  document.getElementById('home').style.display='block';
+  document.querySelectorAll('.teardown').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.nav-pill').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-pill')[0].classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showTeardown(id){
+  document.getElementById('home').style.display='none';
+  document.querySelectorAll('.teardown').forEach(t=>t.classList.remove('active'));
+  document.getElementById('td-'+id).classList.add('active');
+  document.querySelectorAll('.nav-pill').forEach(p=>p.classList.remove('active'));
+  const pills=['home','li','no','wz','fg','dl'];
+  const idx=pills.indexOf(id);
+  if(idx>0) document.querySelectorAll('.nav-pill')[idx].classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showPhase(td,phase){
+  const section=document.getElementById('td-'+td);
+  section.querySelectorAll('.phase').forEach(p=>p.classList.remove('active'));
+  section.querySelectorAll('.td-nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById(td+'-'+phase).classList.add('active');
+  const phases=['overview','personas','journey','scorecard','solutions','mvp'];
+  const idx=phases.indexOf(phase);
+  section.querySelectorAll('.td-nav-item')[idx].classList.add('active');
+}
+</script>
+</body>
+</html>
